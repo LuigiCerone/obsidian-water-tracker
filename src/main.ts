@@ -5,8 +5,18 @@ import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from './settings
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
-	async addIconToBar() {
-		const ribbonIconEl = this.addRibbonIcon(this.settings.selectedIconName, 'Water tracker', (evt: MouseEvent) => {
+	private ribbonIconEl: HTMLElement | null = null;
+
+	async refreshRibbon() {
+		if (!this.settings.enableRibbonIcon) {
+			if (this.ribbonIconEl) {
+				this.ribbonIconEl.remove();
+				this.ribbonIconEl = null;
+			}
+			return;
+		}
+
+		this.ribbonIconEl = this.addRibbonIcon(this.settings.selectedIconName, 'Water tracker', (evt: MouseEvent) => {
 			new Notice('This is a notice!');
 		});
 	}
@@ -14,7 +24,7 @@ export default class MyPlugin extends Plugin {
 	async onload() {
 		await this.loadSettings();
 
-		await this.addIconToBar();
+		await this.refreshRibbon();
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
 		// const statusBarItemEl = this.addStatusBarItem();
@@ -28,7 +38,7 @@ export default class MyPlugin extends Plugin {
 				new Notice('This is a notice!');
 			}
 		});
-		
+
 		// This adds a settings tab so the user can configure various aspects of the plugin
 		this.addSettingTab(new SampleSettingTab(this.app, this));
 
