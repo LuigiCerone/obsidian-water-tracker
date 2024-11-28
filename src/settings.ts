@@ -1,36 +1,42 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import MyPlugin from './main';
+import { ICON_NAMES } from './constants';
 
 export interface MyPluginSettings {
-	mySetting: string;
+  selectedIconName: string;
 }
 
 export const DEFAULT_SETTINGS: MyPluginSettings = {
-	mySetting: 'default'
+  selectedIconName: 'cup-soda'
 }
 
 export class SampleSettingTab extends PluginSettingTab {
-	plugin: MyPlugin;
+  plugin: MyPlugin;
 
-	constructor(app: App, plugin: MyPlugin) {
-		super(app, plugin);
-		this.plugin = plugin;
-	}
+  constructor(app: App, plugin: MyPlugin) {
+    super(app, plugin);
+    this.plugin = plugin;
+  }
 
-	display(): void {
-		const {containerEl} = this;
+  display(): void {
+    const { containerEl } = this;
 
-		containerEl.empty();
+    containerEl.empty();
 
-		new Setting(containerEl)
-			.setName('Setting #1')
-			.setDesc('It\'s a secret')
-			.addText(text => text
-				.setPlaceholder('Enter your secret')
-				.setValue(this.plugin.settings.mySetting)
-				.onChange(async (value) => {
-					this.plugin.settings.mySetting = value;
-					await this.plugin.saveSettings();
-				}));
-	}
+    // Create a dropdown with icon options
+    new Setting(containerEl)
+      .setName("Select an Icon")
+      .setDesc("Choose an icon to use in ribbon bar.")
+      .addDropdown(dropdown => {
+        ICON_NAMES.forEach(icon => {
+          dropdown.addOption(icon, icon);
+        });
+        dropdown.setValue(this.plugin.settings.selectedIconName)
+          .onChange(value => {
+            this.plugin.settings.selectedIconName = value;
+            this.plugin.saveData(this.plugin.settings);
+            this.plugin.addIconToBar();
+          })
+      });
+  }
 }

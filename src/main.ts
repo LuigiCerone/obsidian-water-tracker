@@ -1,16 +1,20 @@
-import { Editor, MarkdownView, Notice, Plugin, } from 'obsidian';
+import { Notice, Plugin, } from 'obsidian';
 import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from './settings';
 
 
 export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 
+	async addIconToBar() {
+		const ribbonIconEl = this.addRibbonIcon(this.settings.selectedIconName, 'Water tracker', (evt: MouseEvent) => {
+			new Notice('This is a notice!');
+		});
+	}
+
 	async onload() {
 		await this.loadSettings();
 
-		const ribbonIconEl = this.addRibbonIcon('cup-soda', 'Water tracker', (evt: MouseEvent) => {
-			new Notice('This is a notice!');
-		});
+		await this.addIconToBar();
 
 		// This adds a status bar item to the bottom of the app. Does not work on mobile apps.
 		// const statusBarItemEl = this.addStatusBarItem();
