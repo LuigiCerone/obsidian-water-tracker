@@ -5,11 +5,13 @@ import { ICON_NAMES } from './constants';
 export interface MyPluginSettings {
   selectedIconName: string;
   enableRibbonIcon: boolean;
+  cupSize: number;
 }
 
 export const DEFAULT_SETTINGS: MyPluginSettings = {
   selectedIconName: 'cup-soda',
-  enableRibbonIcon: true
+  enableRibbonIcon: true,
+  cupSize: 250
 }
 
 export class SampleSettingTab extends PluginSettingTab {
@@ -24,6 +26,8 @@ export class SampleSettingTab extends PluginSettingTab {
     const { containerEl } = this;
 
     containerEl.empty();
+
+    containerEl.createEl("h5", { text: "Ribbon bar settings" });
 
     // Create a toggle to control ribbon icon
     new Setting(containerEl)
@@ -56,6 +60,37 @@ export class SampleSettingTab extends PluginSettingTab {
             this.plugin.saveData(this.plugin.settings);
             this.plugin.refreshRibbon();
           })
+      });
+
+    containerEl.createEl("h5", { text: "Cup settings" });
+
+    new Setting(containerEl)
+      .setName("Cup size")
+      .setDesc("Set the size of the drinking cup")
+      .addText(text => {
+        text.inputEl.type = "number";
+        text.inputEl.step = "1";
+        text.inputEl.min = "50";
+        text.inputEl.max = "4000";
+
+        text.inputEl.value = this.plugin.settings.cupSize.toString();
+
+        text.onChange(async (value) => {
+          const numValue = parseInt(value, 10);
+          if (!isNaN(numValue) && numValue > 0) {
+            this.plugin.settings.cupSize = numValue;
+            this.plugin.saveData(this.plugin.settings);
+          }
+        });
+      })
+      .addExtraButton(button => {
+        button
+          .setIcon("reset")
+          .setTooltip("Reset to default cup size")
+          .onClick(async () => {
+            this.plugin.settings.cupSize = DEFAULT_SETTINGS.cupSize;
+            this.plugin.saveData(this.plugin.settings);
+          });
       });
   }
 }
