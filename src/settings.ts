@@ -16,6 +16,7 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
 
 export class SampleSettingTab extends PluginSettingTab {
   plugin: MyPlugin;
+  textInputEl: HTMLInputElement | null = null;
 
   constructor(app: App, plugin: MyPlugin) {
     super(app, plugin);
@@ -79,9 +80,12 @@ export class SampleSettingTab extends PluginSettingTab {
           const numValue = parseInt(value, 10);
           if (!isNaN(numValue) && numValue > 0) {
             this.plugin.settings.cupSize = numValue;
-            this.plugin.saveData(this.plugin.settings);
+            await this.plugin.saveData(this.plugin.settings);
           }
         });
+
+        // Save a reference to the input element for reset
+        this.textInputEl = text.inputEl;
       })
       .addExtraButton(button => {
         button
@@ -89,8 +93,11 @@ export class SampleSettingTab extends PluginSettingTab {
           .setTooltip("Reset to default cup size")
           .onClick(async () => {
             this.plugin.settings.cupSize = DEFAULT_SETTINGS.cupSize;
-            this.plugin.saveData(this.plugin.settings);
+            await this.plugin.saveData(this.plugin.settings);
+
+            this.textInputEl!.value = DEFAULT_SETTINGS.cupSize.toString();
           });
       });
+
   }
 }
