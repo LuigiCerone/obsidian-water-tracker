@@ -1,5 +1,6 @@
 import { Notice, Plugin, } from 'obsidian';
 import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from './settings';
+import { computeDelta } from './utils';
 
 
 export default class MyPlugin extends Plugin {
@@ -17,8 +18,26 @@ export default class MyPlugin extends Plugin {
 		}
 
 		this.ribbonIconEl = this.addRibbonIcon(this.settings.selectedIconName, 'Water tracker', (evt: MouseEvent) => {
-			new Notice('This is a notice!');
+		try {
+				this.addDrink();
+			} catch (error) {
+				console.error(error);
+				new Notice("Error");
+			}
 		});
+	}
+
+	async addDrink() {
+		const activeFile = this.app.workspace.getActiveFile();
+		if (!activeFile) {
+			console.error("No active file found.");
+			return;
+		}
+
+		const newContent = await computeDelta(activeFile, this.settings);
+
+		await this.app.vault.modify(activeFile, newContent);
+		new Notice('One drink added');
 	}
 
 	async onload() {
@@ -35,7 +54,12 @@ export default class MyPlugin extends Plugin {
 			id: 'add-one-drinked',
 			name: 'Add one drinked',
 			callback: () => {
-				new Notice('This is a notice!');
+				try {
+					this.addDrink();
+				} catch (error) {
+					console.error(error);
+					new Notice("Error");
+				}
 			}
 		});
 
