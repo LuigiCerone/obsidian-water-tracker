@@ -1,6 +1,7 @@
 import { Notice, Plugin, } from 'obsidian';
 import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from './settings';
 import { computeDelta } from './utils';
+import { KEY_STORAGE_PROPERTY } from './constants';
 
 
 export default class MyPlugin extends Plugin {
@@ -34,7 +35,12 @@ export default class MyPlugin extends Plugin {
 			return;
 		}
 
-		const newContent = await computeDelta(activeFile, this.settings);
+		let newContent = "";
+		if (this.settings.storageOption == KEY_STORAGE_PROPERTY) {
+			newContent = await computeDelta(activeFile, this.settings);
+		} else {
+			console.log('TODO');
+		}
 
 		await this.app.vault.modify(activeFile, newContent);
 		new Notice('One drink added');

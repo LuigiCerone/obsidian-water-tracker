@@ -1,17 +1,19 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
 import MyPlugin from './main';
-import { ICON_NAMES } from './constants';
+import { ICON_NAMES, KEY_STORAGE_LOG_FILE, KEY_STORAGE_PROPERTY } from './constants';
 
 export interface MyPluginSettings {
   selectedIconName: string;
   enableRibbonIcon: boolean;
   cupSize: number;
+  storageOption: string;
 }
 
 export const DEFAULT_SETTINGS: MyPluginSettings = {
   selectedIconName: 'cup-soda',
   enableRibbonIcon: true,
-  cupSize: 250
+  cupSize: 250,
+  storageOption: KEY_STORAGE_PROPERTY
 }
 
 export class SampleSettingTab extends PluginSettingTab {
@@ -99,5 +101,25 @@ export class SampleSettingTab extends PluginSettingTab {
           });
       });
 
+
+    containerEl.createEl("h5", { text: "Storage settings" });
+    // Create a dropdown with logging options
+    new Setting(containerEl)
+      .setName("Choose storage method")
+      .setDesc("Select where to save your drink log entries: either in a property field or a separate log file")
+      .addDropdown(dropdown => {
+        dropdown
+          .addOptions({
+            [KEY_STORAGE_PROPERTY]: 'Property',
+            [KEY_STORAGE_LOG_FILE]: 'Log file'
+          })
+          .setValue(this.plugin.settings.storageOption)
+          .onChange(async value => {
+            console.log("Selected value:", value); // Debugging output
+            this.plugin.settings.storageOption = value;
+            await this.plugin.saveSettings();
+            console.log("Settings saved:", this.plugin.settings.storageOption); // Debugging
+          });
+      });
   }
 }
