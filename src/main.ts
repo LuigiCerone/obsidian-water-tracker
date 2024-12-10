@@ -1,6 +1,6 @@
 import { Notice, Plugin, } from 'obsidian';
 import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from './settings';
-import { computeDelta } from './utils';
+import { computeDelta, getOutputFile } from './utils';
 import { KEY_STORAGE_PROPERTY } from './constants';
 
 
@@ -19,7 +19,7 @@ export default class MyPlugin extends Plugin {
 		}
 
 		this.ribbonIconEl = this.addRibbonIcon(this.settings.selectedIconName, 'Water tracker', (evt: MouseEvent) => {
-		try {
+			try {
 				this.addDrink();
 			} catch (error) {
 				console.error(error);
@@ -29,20 +29,20 @@ export default class MyPlugin extends Plugin {
 	}
 
 	async addDrink() {
-		const activeFile = this.app.workspace.getActiveFile();
-		if (!activeFile) {
-			console.error("No active file found.");
+		const outputFile = await getOutputFile(this.settings);
+		
+		if (!outputFile) {
 			return;
 		}
 
 		let newContent = "";
 		if (this.settings.storageOption == KEY_STORAGE_PROPERTY) {
-			newContent = await computeDelta(activeFile, this.settings);
+			newContent = await computeDelta(outputFile, this.settings);
 		} else {
 			console.log('TODO');
 		}
 
-		await this.app.vault.modify(activeFile, newContent);
+		await this.app.vault.modify(outputFile, newContent);
 		new Notice('One drink added');
 	}
 

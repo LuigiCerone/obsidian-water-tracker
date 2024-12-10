@@ -7,13 +7,15 @@ export interface MyPluginSettings {
   enableRibbonIcon: boolean;
   cupSize: number;
   storageOption: string;
+  enableDailyFile: boolean;
 }
 
 export const DEFAULT_SETTINGS: MyPluginSettings = {
   selectedIconName: 'cup-soda',
   enableRibbonIcon: true,
   cupSize: 250,
-  storageOption: KEY_STORAGE_PROPERTY
+  storageOption: KEY_STORAGE_PROPERTY,
+  enableDailyFile: false
 }
 
 export class SampleSettingTab extends PluginSettingTab {
@@ -103,6 +105,20 @@ export class SampleSettingTab extends PluginSettingTab {
 
 
     containerEl.createEl("h5", { text: "Storage settings" });
+    
+    // Create a toggle to enable daily file logging
+    new Setting(containerEl)
+      .setName("Enable daily file")
+      .setDesc("Toggle to enable or disable daily file usage.")
+      .addToggle(toggle => {
+        toggle
+          .setValue(this.plugin.settings.enableDailyFile)
+          .onChange(value => {
+            this.plugin.settings.enableDailyFile = value;
+            this.plugin.saveData(this.plugin.settings);
+          });
+      });
+
     // Create a dropdown with logging options
     new Setting(containerEl)
       .setName("Choose storage method")
