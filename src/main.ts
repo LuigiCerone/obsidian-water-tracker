@@ -1,7 +1,7 @@
 import { Notice, Plugin, } from 'obsidian';
 import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from './settings';
-import { computeDelta, getOutputFile } from './utils';
-import { KEY_STORAGE_PROPERTY } from './constants';
+import { updateProperty, updateLog, getOutputFile } from './utils';
+import { KEY_STORAGE_LOG_FILE, KEY_STORAGE_PROPERTY } from './constants';
 
 
 export default class MyPlugin extends Plugin {
@@ -35,14 +35,13 @@ export default class MyPlugin extends Plugin {
 			return;
 		}
 
-		let newContent = "";
 		if (this.settings.storageOption == KEY_STORAGE_PROPERTY) {
-			newContent = await computeDelta(outputFile, this.settings);
-		} else {
-			console.log('TODO');
+			const newContent = await updateProperty(outputFile, this.settings);
+			await this.app.vault.modify(outputFile, newContent);
+		} else if (this.settings.storageOption == KEY_STORAGE_LOG_FILE) {
+			await updateLog(outputFile, this.settings);
 		}
 
-		await this.app.vault.modify(outputFile, newContent);
 		new Notice('One drink added');
 	}
 

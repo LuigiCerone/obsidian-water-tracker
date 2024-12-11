@@ -7,27 +7,33 @@ import {
     getAllDailyNotes,
 } from 'obsidian-daily-notes-interface'
 import moment from 'moment';
+import { createLog, DrinkLog, logToText } from "./logger";
 
 
-export async function getOutputFile(settings: MyPluginSettings) : Promise<TFile | void> {
+export async function getOutputFile(settings: MyPluginSettings): Promise<TFile | void> {
     let outputFile;
 
-    if (settings.enableDailyFile){
+    if (settings.enableDailyFile === true) {
         outputFile = getDailyNote(moment() as any, getAllDailyNotes())
     } else {
         outputFile = this.app.workspace.getActiveFile();
     }
 
     if (!outputFile) {
-        console.error("No outfile file found.");
-        new Notice("No active file found", 3000);
+        if (settings.enableDailyFile) {
+            console.error("No outfile file found.");
+            new Notice("No active file found", 3000);
+        } else {
+            console.error("No daily file found.");
+            new Notice("No daily file found", 3000);
+        }
     }
 
     return outputFile;
 }
 
-export async function computeDelta(outputFile: TFile, appSettings: MyPluginSettings) : Promise<string> {
-    
+export async function updateProperty(outputFile: TFile, appSettings: MyPluginSettings): Promise<string> {
+
     const content = await this.app.vault.read(outputFile);
 
     const frontmatterRegex = /^---\n([\s\S]*?)\n---/;
@@ -51,4 +57,14 @@ export async function computeDelta(outputFile: TFile, appSettings: MyPluginSetti
     }
 
     return newFrontmatter;
+}
+
+export async function updateLog(outputFile: TFile, appSettings: MyPluginSettings) {
+    const logToWrite: DrinkLog = createLog(appSettings);
+
+    const logText = await logToText(logToWrite);
+
+    if (logText) {
+        await this.app.vault.append(outputFile, `\n${logText}`)
+    }
 }
