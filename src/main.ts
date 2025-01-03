@@ -1,11 +1,11 @@
 import { Notice, Plugin, } from 'obsidian';
-import { DEFAULT_SETTINGS, MyPluginSettings, SampleSettingTab } from './settings';
+import { DEFAULT_SETTINGS, WaterTrackerSettings, WaterTrackerSettingTab } from './settings';
 import { updateProperty, updateLog, getOutputFile } from './utils';
 import { KEY_STORAGE_LOG_FILE, KEY_STORAGE_PROPERTY } from './constants';
 
 
-export default class MyPlugin extends Plugin {
-	settings: MyPluginSettings;
+export default class WaterTracker extends Plugin {
+	settings: WaterTrackerSettings;
 
 	private ribbonIconEl: HTMLElement | null = null;
 
@@ -63,7 +63,7 @@ export default class MyPlugin extends Plugin {
 			}
 		});
 
-		this.addSettingTab(new SampleSettingTab(this.app, this));
+		this.addSettingTab(new WaterTrackerSettingTab(this.app, this));
 	}
 
 	onunload() {

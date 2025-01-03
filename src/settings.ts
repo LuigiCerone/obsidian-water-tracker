@@ -2,7 +2,7 @@ import { App, PluginSettingTab, Setting } from 'obsidian';
 import MyPlugin from './main';
 import { ICON_NAMES, KEY_STORAGE_LOG_FILE, KEY_STORAGE_PROPERTY } from './constants';
 
-export interface MyPluginSettings {
+export interface WaterTrackerSettings {
   selectedIconName: string;
   enableRibbonIcon: boolean;
   cupSize: number;
@@ -10,7 +10,7 @@ export interface MyPluginSettings {
   enableDailyFile: boolean;
 }
 
-export const DEFAULT_SETTINGS: MyPluginSettings = {
+export const DEFAULT_SETTINGS: WaterTrackerSettings = {
   selectedIconName: 'cup-soda',
   enableRibbonIcon: true,
   cupSize: 250,
@@ -18,7 +18,7 @@ export const DEFAULT_SETTINGS: MyPluginSettings = {
   enableDailyFile: false
 }
 
-export class SampleSettingTab extends PluginSettingTab {
+export class WaterTrackerSettingTab extends PluginSettingTab {
   plugin: MyPlugin;
   textInputEl: HTMLInputElement | null = null;
 

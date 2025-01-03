@@ -1,5 +1,5 @@
 import moment from "moment";
-import { MyPluginSettings } from "./settings";
+import { WaterTrackerSettings } from "./settings";
 
 export type DrinkLog = {
     amount: number
@@ -7,7 +7,7 @@ export type DrinkLog = {
 }
 
 
-export function createLog(appSettings: MyPluginSettings): DrinkLog {
+export function createLog(appSettings: WaterTrackerSettings): DrinkLog {
     return {
         amount: appSettings.cupSize,
         time: new Date().getTime()
@@ -18,5 +18,5 @@ export function logToText(logToWrite: DrinkLog) {
     const time = moment(logToWrite.time)
     const emoji = '🥤'
 
-    return `- ${emoji} (water::${logToWrite.amount} ml) (time:: ${time.format('YYYY-MM-DD HH:mm')})`
+    return `- ${emoji} (water::${logToWrite.amount}) (time:: ${time.format('YYYY-MM-DD HH:mm')})`
 }

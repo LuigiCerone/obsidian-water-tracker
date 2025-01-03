@@ -1,6 +1,6 @@
 import { Notice, TFile } from "obsidian";
 import { KEY_NAME } from "./constants";
-import { MyPluginSettings } from "./settings";
+import { WaterTrackerSettings } from "./settings";
 import * as yaml from "js-yaml";
 import {
     getDailyNote,
@@ -10,7 +10,7 @@ import moment from 'moment';
 import { createLog, DrinkLog, logToText } from "./logger";
 
 
-export async function getOutputFile(settings: MyPluginSettings): Promise<TFile | void> {
+export async function getOutputFile(settings: WaterTrackerSettings): Promise<TFile | void> {
     let outputFile;
 
     if (settings.enableDailyFile === true) {
@@ -32,7 +32,7 @@ export async function getOutputFile(settings: MyPluginSettings): Promise<TFile |
     return outputFile;
 }
 
-export async function updateProperty(outputFile: TFile, appSettings: MyPluginSettings): Promise<string> {
+export async function updateProperty(outputFile: TFile, appSettings: WaterTrackerSettings): Promise<string> {
 
     const content = await this.app.vault.read(outputFile);
 
@@ -59,7 +59,7 @@ export async function updateProperty(outputFile: TFile, appSettings: MyPluginSet
     return newFrontmatter;
 }
 
-export async function updateLog(outputFile: TFile, appSettings: MyPluginSettings) {
+export async function updateLog(outputFile: TFile, appSettings: WaterTrackerSettings) {
     const logToWrite: DrinkLog = createLog(appSettings);
 
     const logText = await logToText(logToWrite);
