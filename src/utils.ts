@@ -21,11 +21,11 @@ export async function getOutputFile(settings: MyPluginSettings): Promise<TFile |
 
     if (!outputFile) {
         if (settings.enableDailyFile) {
-            console.error("No outfile file found.");
-            new Notice("No active file found", 3000);
-        } else {
             console.error("No daily file found.");
             new Notice("No daily file found", 3000);
+        } else {
+            console.error("No active file found.");
+            new Notice("No active file found", 3000);
         }
     }
 
@@ -51,7 +51,7 @@ export async function updateProperty(outputFile: TFile, appSettings: MyPluginSet
         const yamlContent = yaml.dump(frontmatterObject);
         newFrontmatter = `---\n${yamlContent}\n---\n${restOfFile}`;
     } else {
-        const newFrontmatterObject = { [KEY_NAME]: 5 };
+        const newFrontmatterObject = { [KEY_NAME]: appSettings.cupSize };
         const yamlContent = yaml.dump(newFrontmatterObject);
         newFrontmatter = `---\n${yamlContent}\n---\n`;
     }

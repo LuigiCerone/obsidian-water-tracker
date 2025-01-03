@@ -18,5 +18,5 @@ export function logToText(logToWrite: DrinkLog) {
     const time = moment(logToWrite.time)
     const emoji = '🥤'
 
-    return `- ${emoji} (water::${logToWrite.amount}) (time:: ${time.format('YYYY-MM-DD HH:mm')})`
+    return `- ${emoji} (water::${logToWrite.amount} ml) (time:: ${time.format('YYYY-MM-DD HH:mm')})`
 }

@@ -131,10 +131,8 @@ export class SampleSettingTab extends PluginSettingTab {
           })
           .setValue(this.plugin.settings.storageOption)
           .onChange(async value => {
-            console.log("Selected value:", value); // Debugging output
             this.plugin.settings.storageOption = value;
             await this.plugin.saveSettings();
-            console.log("Settings saved:", this.plugin.settings.storageOption); // Debugging
           });
       });
   }
