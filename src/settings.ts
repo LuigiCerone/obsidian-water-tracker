@@ -88,7 +88,6 @@ export class WaterTrackerSettingTab extends PluginSettingTab {
           }
         });
 
-        // Save a reference to the input element for reset
         this.textInputEl = text.inputEl;
       })
       .addExtraButton(button => {
