@@ -33,7 +33,6 @@ export async function getOutputFile(settings: WaterTrackerSettings): Promise<TFi
 }
 
 export async function updateProperty(outputFile: TFile, appSettings: WaterTrackerSettings): Promise<string> {
-
     const content = await this.app.vault.read(outputFile);
 
     const frontmatterRegex = /^---\n([\s\S]*?)\n---/;
@@ -46,14 +45,14 @@ export async function updateProperty(outputFile: TFile, appSettings: WaterTracke
         restOfFile = content.slice(match[0].length).trim();
 
         const frontmatterObject = this.app.metadataCache.getFileCache(outputFile)?.frontmatter || {};
-        frontmatterObject[KEY_NAME] += appSettings.cupSize;
+        frontmatterObject[KEY_NAME] = (frontmatterObject[KEY_NAME] || 0) + appSettings.cupSize;
 
         const yamlContent = yaml.dump(frontmatterObject);
         newFrontmatter = `---\n${yamlContent}\n---\n${restOfFile}`;
     } else {
         const newFrontmatterObject = { [KEY_NAME]: appSettings.cupSize };
         const yamlContent = yaml.dump(newFrontmatterObject);
-        newFrontmatter = `---\n${yamlContent}\n---\n`;
+        newFrontmatter = `---\n${yamlContent}\n---\n${content}`;
     }
 
     return newFrontmatter;
