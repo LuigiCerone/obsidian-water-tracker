@@ -14,7 +14,7 @@ export async function getOutputFile(settings: WaterTrackerSettings): Promise<TFi
     let outputFile;
 
     if (settings.enableDailyFile === true) {
-        outputFile = getDailyNote(moment() as any, getAllDailyNotes())
+        outputFile = getDailyNote(moment(), getAllDailyNotes())
     } else {
         outputFile = this.app.workspace.getActiveFile();
     }
