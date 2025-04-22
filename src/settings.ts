@@ -4,7 +4,6 @@ import { ICON_NAMES, KEY_STORAGE_LOG_FILE, KEY_STORAGE_PROPERTY } from './consta
 
 export interface WaterTrackerSettings {
   selectedIconName: string;
-  enableRibbonIcon: boolean;
   cupSize: number;
   storageOption: string;
   enableDailyFile: boolean;
@@ -12,7 +11,6 @@ export interface WaterTrackerSettings {
 
 export const DEFAULT_SETTINGS: WaterTrackerSettings = {
   selectedIconName: 'cup-soda',
-  enableRibbonIcon: true,
   cupSize: 250,
   storageOption: KEY_STORAGE_PROPERTY,
   enableDailyFile: false
@@ -32,24 +30,9 @@ export class WaterTrackerSettingTab extends PluginSettingTab {
 
     containerEl.empty();
 
-    containerEl.createEl("h5", { text: "Ribbon bar settings" });
-
-    // Create a toggle to control ribbon icon
     new Setting(containerEl)
-      .setName("Enable ribbon icon")
-      .setDesc("Toggle to enable or disable icon in ribbon bar.")
-      .addToggle(toggle => {
-        toggle
-          .setValue(this.plugin.settings.enableRibbonIcon)
-          .onChange(value => {
-            this.plugin.settings.enableRibbonIcon = value;
-            this.plugin.saveData(this.plugin.settings);
-
-            // Enable or disable the dropdown based on the toggle state
-            dropdown.setDisabled(!value);
-            this.plugin.refreshRibbon();
-          });
-      });
+      .setName('Ribbon bar')
+      .setHeading();
 
     // Create a dropdown with icon options
     let dropdown = new Setting(containerEl)
@@ -67,7 +50,9 @@ export class WaterTrackerSettingTab extends PluginSettingTab {
           })
       });
 
-    containerEl.createEl("h5", { text: "Cup settings" });
+    new Setting(containerEl)
+      .setName('Cup')
+      .setHeading();
 
     new Setting(containerEl)
       .setName("Cup size")
@@ -103,7 +88,9 @@ export class WaterTrackerSettingTab extends PluginSettingTab {
       });
 
 
-    containerEl.createEl("h5", { text: "Storage settings" });
+    new Setting(containerEl)
+      .setName('Storage')
+      .setHeading();
     
     // Create a toggle to enable daily file logging
     new Setting(containerEl)

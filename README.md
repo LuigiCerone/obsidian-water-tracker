@@ -1,4 +1,4 @@
-# Obsidian Water Tracker plugin
+# Water Tracker plugin
 
 ## Overview
 

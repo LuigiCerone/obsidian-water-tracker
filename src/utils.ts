@@ -1,12 +1,11 @@
 import { Notice, TFile } from "obsidian";
 import { KEY_NAME } from "./constants";
 import { WaterTrackerSettings } from "./settings";
-import * as yaml from "js-yaml";
 import {
     getDailyNote,
     getAllDailyNotes,
 } from 'obsidian-daily-notes-interface'
-import moment from 'moment';
+import { moment } from 'obsidian';
 import { createLog, DrinkLog, logToText } from "./logger";
 
 
@@ -32,30 +31,13 @@ export async function getOutputFile(settings: WaterTrackerSettings): Promise<TFi
     return outputFile;
 }
 
-export async function updateProperty(outputFile: TFile, appSettings: WaterTrackerSettings): Promise<string> {
-    const content = await this.app.vault.read(outputFile);
-
-    const frontmatterRegex = /^---\n([\s\S]*?)\n---/;
-    const match = content.match(frontmatterRegex);
-
-    let newFrontmatter = "";
-    let restOfFile = content;
-
-    if (match) {
-        restOfFile = content.slice(match[0].length).trim();
-
-        const frontmatterObject = this.app.metadataCache.getFileCache(outputFile)?.frontmatter || {};
-        frontmatterObject[KEY_NAME] = (frontmatterObject[KEY_NAME] || 0) + appSettings.cupSize;
-
-        const yamlContent = yaml.dump(frontmatterObject);
-        newFrontmatter = `---\n${yamlContent}\n---\n${restOfFile}`;
-    } else {
-        const newFrontmatterObject = { [KEY_NAME]: appSettings.cupSize };
-        const yamlContent = yaml.dump(newFrontmatterObject);
-        newFrontmatter = `---\n${yamlContent}\n---\n${content}`;
-    }
-
-    return newFrontmatter;
+export async function updateProperty(outputFile: TFile, appSettings: WaterTrackerSettings): Promise<void> {
+    await this.app.fileManager.processFrontMatter(outputFile, (frontmatter: { [key: string]: unknown }) => {
+        if (typeof frontmatter[KEY_NAME] !== 'number') {
+            frontmatter[KEY_NAME] = 0;
+        }
+        frontmatter[KEY_NAME] = (frontmatter[KEY_NAME] as number) + appSettings.cupSize;
+    });
 }
 
 export async function updateLog(outputFile: TFile, appSettings: WaterTrackerSettings) {

@@ -10,14 +10,6 @@ export default class WaterTracker extends Plugin {
 	private ribbonIconEl: HTMLElement | null = null;
 
 	async refreshRibbon() {
-		if (!this.settings.enableRibbonIcon) {
-			if (this.ribbonIconEl) {
-				this.ribbonIconEl.remove();
-				this.ribbonIconEl = null;
-			}
-			return;
-		}
-
 		this.ribbonIconEl = this.addRibbonIcon(this.settings.selectedIconName, 'Water tracker', (evt: MouseEvent) => {
 			try {
 				this.addDrink();
@@ -36,8 +28,7 @@ export default class WaterTracker extends Plugin {
 		}
 
 		if (this.settings.storageOption == KEY_STORAGE_PROPERTY) {
-			const newContent = await updateProperty(outputFile, this.settings);
-			await this.app.vault.modify(outputFile, newContent);
+			await updateProperty(outputFile, this.settings);
 		} else if (this.settings.storageOption == KEY_STORAGE_LOG_FILE) {
 			await updateLog(outputFile, this.settings);
 		}
