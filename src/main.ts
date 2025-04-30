@@ -42,8 +42,8 @@ export default class WaterTracker extends Plugin {
 		await this.refreshRibbon();
 
 		this.addCommand({
-			id: 'add-one-drinked',
-			name: 'Add one drinked',
+			id: 'add-one-drink',
+			name: 'Add one drink',
 			callback: () => {
 				try {
 					this.addDrink();

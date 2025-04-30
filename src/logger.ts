@@ -1,4 +1,4 @@
-import moment from "moment";
+import { moment } from 'obsidian';
 import { WaterTrackerSettings } from "./settings";
 
 export type DrinkLog = {

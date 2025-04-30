@@ -1,5 +1,5 @@
 import { App, PluginSettingTab, Setting } from 'obsidian';
-import MyPlugin from './main';
+import WaterTracker from './main';
 import { ICON_NAMES, KEY_STORAGE_LOG_FILE, KEY_STORAGE_PROPERTY } from './constants';
 
 export interface WaterTrackerSettings {
@@ -17,10 +17,10 @@ export const DEFAULT_SETTINGS: WaterTrackerSettings = {
 }
 
 export class WaterTrackerSettingTab extends PluginSettingTab {
-  plugin: MyPlugin;
+  plugin: WaterTracker;
   textInputEl: HTMLInputElement | null = null;
 
-  constructor(app: App, plugin: MyPlugin) {
+  constructor(app: App, plugin: WaterTracker) {
     super(app, plugin);
     this.plugin = plugin;
   }
@@ -29,10 +29,6 @@ export class WaterTrackerSettingTab extends PluginSettingTab {
     const { containerEl } = this;
 
     containerEl.empty();
-
-    new Setting(containerEl)
-      .setName('Ribbon bar')
-      .setHeading();
 
     // Create a dropdown with icon options
     let dropdown = new Setting(containerEl)
@@ -50,9 +46,6 @@ export class WaterTrackerSettingTab extends PluginSettingTab {
           })
       });
 
-    new Setting(containerEl)
-      .setName('Cup')
-      .setHeading();
 
     new Setting(containerEl)
       .setName("Cup size")
