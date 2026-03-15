@@ -3,7 +3,7 @@
 	"name": "Water Tracker",
 	"version": "1.0.0",
 	"minAppVersion": "0.15.0",
-	"description": "Keep track of how much water you drunk",
+	"description": "Keep track of how much water you drank",
 	"author": "Luigi Cerone",
 	"isDesktopOnly": false
 }
